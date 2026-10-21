@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#0A0B10">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="НЕЙРО">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <title>ВЕТКА СУДЬБЫ: НЕЙРО</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="app">
+    <section class="screen active" id="screen-menu">
+        <div class="menu-bg"></div>
+        <div class="menu-logo">
+            <div class="menu-tag">// НЕЙРО // ВЕРСИЯ 1.0</div>
+            <h1>ВЕТКА<br>СУДЬБЫ: <span>НЕЙРО</span></h1>
+            <div class="menu-sub">ИНТЕРАКТИВНАЯ НЕЙРО-ИСТОРИЯ // RU</div>
+        </div>
+        <div class="menu-return" id="menu-return" style="display:none">
+            <span id="menu-return-label"></span>
+            <button class="btn btn-ghost" onclick="continueStory()">ПРОДОЛЖИТЬ ▶</button>
+        </div>
+        <nav class="menu-buttons">
+            <button class="btn btn-primary" onclick="startGame()">НОВЫЙ ПРОХОД</button>
+            <button class="btn btn-ghost" onclick="navigateTo('screen-chapters')">ВЕРНУТЬСЯ В ПОТОК</button>
+            <button class="btn btn-ghost" onclick="navigateTo('screen-endings')">АРХИВ ИСХОДОВ</button>
+            <button class="btn btn-ghost" onclick="navigateTo('screen-system')">СИСТЕМА</button>
+        </nav>
+        <div class="menu-footer">НЕЙРО // ГЛАВНОЕ МЕНЮ<br>СЕКТОР ДЕЛЬТА // СУБЪЕКТ: КАИ</div>
+    </section>
+
+    <!-- ══════════════ ВЫБОР ДНЯ ══════════════ -->
+    <section class="screen" id="screen-chapters">
+        <div class="top-bar">
+            <span>◈ ВЫБОР ДНЯ</span>
+            <button class="icon-btn" onclick="navigateTo('screen-menu')">✕</button>
+        </div>
+        <div class="chapters-list" id="chapters-list"></div>
+        <button class="btn btn-ghost bottom" onclick="navigateTo('screen-menu')">← В МЕНЮ</button>
+    </section>
+
+    <!-- ══════════════ ЧТЕНИЕ (ДИАЛОГ) ══════════════ -->
+    <section class="screen" id="screen-reading">
+        <div class="status-bar">
+            <span id="stat-day">[ ДЕНЬ 01 // 08:14 ]</span>
+            <span id="stat-chrome">ХРОМ 42%</span>
+            <span id="stat-memory">ПАМЯТЬ 78%</span>
+            <button class="icon-btn" onclick="toggleMenu()">☰</button>
+        </div>
+
+        <div class="reading-bg" id="reading-bg">
+            <div class="character-portrait" id="character-portrait"></div>
+        </div>
+
+        <div class="reading-bottom">
+          <div class="dialogue-container" id="dialogue-container">
+            <div class="dialogue-header">
+              <div class="speaker-avatar" id="speaker-avatar">◈</div>
+              <div class="speaker-info">
+                <div class="speaker-name" id="speaker-name">КАИ</div>
+                <div class="speaker-role" id="speaker-role">ЭЛИТНЫЙ КУРЬЕР</div>
+              </div>
+            </div>
+
+            <div class="dialogue-text" id="dialogue-text">Текст реплики...</div>
+
+            <div class="dialogue-progress">
+              <span id="dialogue-counter">1 / 5</span>
+              <div class="dialogue-dots" id="dialogue-dots"></div>
+            </div>
+          </div>
+
+          <button class="btn btn-primary" id="continue-btn" onclick="nextScene()">
+            <span id="continue-label">ПРОДОЛЖИТЬ ▶</span>
+          </button>
+        </div>
+
+        <nav class="bottom-nav">
+            <button class="nav-btn active">◈ СЮЖЕТ</button>
+            <button class="nav-btn" onclick="navigateTo('screen-subject')">◈ СУБЪЕКТ</button>
+            <button class="nav-btn" onclick="navigateTo('screen-map')">◈ КАРТА</button>
+            <button class="nav-btn" onclick="navigateTo('screen-system')">◈ СИСТЕМА</button>
+        </nav>
+    </section>
+
+    <!-- ══════════════ ВЫБОР ══════════════ -->
+    <section class="screen" id="screen-choice">
+        <div class="status-bar">
+            <span id="stat-day-2">[ ДЕНЬ 01 // 08:15 ]</span>
+            <span id="stat-chrome-2">ХРОМ 42%</span>
+            <span id="stat-memory-2">ПАМЯТЬ 78%</span>
+            <button class="icon-btn" onclick="toggleMenu()">☰</button>
+        </div>
+
+        <div class="choice-header" id="choice-header">◈ РАЗВИЛКА</div>
+        <div class="choice-question" id="choice-question"></div>
+
+        <div class="choice-list" id="choice-list"></div>
+
+        <div class="choice-foot" id="choice-foot"></div>
+
+        <nav class="bottom-nav">
+            <button class="nav-btn active">◈ СЮЖЕТ</button>
+            <button class="nav-btn" onclick="navigateTo('screen-subject')">◈ СУБЪЕКТ</button>
+            <button class="nav-btn" onclick="navigateTo('screen-map')">◈ КАРТА</button>
+            <button class="nav-btn" onclick="navigateTo('screen-system')">◈ СИСТЕМА</button>
+        </nav>
+    </section>
+
+    <!-- ══════════════ ИСХОД / ФИНАЛ ══════════════ -->
+    <section class="screen" id="screen-finale">
+        <div class="finale-tag" id="finale-tag">◈ ИСХОД ЗАФИКСИРОВАН</div>
+        <div class="finale-body">
+            <div class="finale-title" id="finale-title">НЕОНОВЫЙ РАССВЕТ</div>
+            <div class="finale-sub" id="finale-sub"></div>
+            <div class="finale-text" id="finale-text"></div>
+            <div class="finale-stats" id="finale-stats"></div>
+        </div>
+        <div class="bottom-row">
+            <button class="btn btn-ghost" onclick="navigateTo('screen-endings')">АРХИВ ИСХОДОВ</button>
+            <button class="btn btn-primary" onclick="startGame()">НОВЫЙ ПРОХОД</button>
+        </div>
+    </section>
+
+    <!-- ══════════════ СУБЪЕКТ ══════════════ -->
+    <section class="screen" id="screen-subject">
+        <div class="top-bar">
+            <span>◈ СУБЪЕКТ // КАИ</span>
+            <button class="icon-btn" onclick="goBack()">✕</button>
+        </div>
+
+        <div class="subject-body">
+            <div class="subject-block">
+                <div class="block-label" id="implant-label">ИМПЛАНТЫ // 2/9</div>
+                <div class="implant-grid" id="implant-grid"></div>
+            </div>
+
+            <div class="subject-block">
+                <div class="block-label">СТАТЫ</div>
+                <div class="stat-row"><span>СИЛА</span><div class="bar"><div class="bar-fill" id="bar-force" style="width:15%"></div></div><span id="val-force">15</span></div>
+                <div class="stat-row"><span>КОНТРОЛЬ</span><div class="bar"><div class="bar-fill" id="bar-control" style="width:62%"></div></div><span id="val-control">62</span></div>
+                <div class="stat-row"><span>ПАМЯТЬ</span><div class="bar bar-lime"><div class="bar-fill" id="bar-memory" style="width:78%"></div></div><span id="val-memory">78%</span></div>
+                <div class="stat-row"><span>ВЗЛОМ</span><div class="bar"><div class="bar-fill" id="bar-hack" style="width:30%"></div></div><span id="val-hack">3</span></div>
+                <div class="stat-row"><span>ХРОМ</span><div class="bar"><div class="bar-fill" id="bar-chrome" style="width:42%"></div></div><span id="val-chrome">42%</span></div>
+            </div>
+
+            <div class="subject-block">
+                <div class="block-label" id="balance-label">КРЕДИТЫ // 3 200</div>
+                <div class="subject-block-sub" id="subject-inventory">ИНВЕНТАРЬ ПУСТ</div>
+            </div>
+
+            <div class="subject-block">
+                <div class="block-label">АКТИВНЫЕ ЭФФЕКТЫ</div>
+                <div id="effects-list"></div>
+            </div>
+        </div>
+
+        <button class="btn btn-primary bottom" onclick="navigateTo('screen-ripperdoc')">К РИППЕРДОКУ</button>
+    </section>
+
+    <!-- ══════════════ РИППЕРДОК ══════════════ -->
+    <section class="screen" id="screen-ripperdoc">
+        <div class="top-bar">
+            <span>◈ РИППЕРДОК</span>
+            <button class="icon-btn" onclick="goBack()">✕</button>
+        </div>
+
+        <div class="ripper-body">
+            <div class="body-schema">
+                <div class="schema-figure" id="schema-figure"></div>
+                <div class="schema-label" id="schema-label">ХРОМ 42% // 2 ИМПЛАНТА</div>
+            </div>
+
+            <div class="doc-line" id="ripper-note">// КЛИНИКА «ПРОВОД» // ДОКТОР МОРО</div>
+
+            <div class="implant-store" id="implant-store"></div>
+        </div>
+
+        <nav class="bottom-nav">
+            <button class="nav-btn" onclick="navigateTo('screen-reading')">◈ СЮЖЕТ</button>
+            <button class="nav-btn" onclick="navigateTo('screen-subject')">◈ СУБЪЕКТ</button>
+            <button class="nav-btn" onclick="navigateTo('screen-map')">◈ КАРТА</button>
+            <button class="nav-btn" onclick="navigateTo('screen-system')">◈ СИСТЕМА</button>
+        </nav>
+    </section>
+
+    <!-- ══════════════ КИБЕРПСИХ ══════════════ -->
+    <section class="screen" id="screen-cyberpsych">
+        <div class="cyber-header">
+            <div class="cyber-tag">[ КИБЕРПСИХ ]</div>
+            <div class="cyber-sub" id="cyber-sub">ПАМЯТЬ 23% // КОНТРОЛЬ ПОВРЕЖДЕН</div>
+        </div>
+        <div class="cyber-body">
+            <div class="cyber-portrait" id="cyber-portrait"></div>
+            <div class="cyber-text" id="cyber-text"></div>
+            <div class="cyber-panels" id="cyber-panels"></div>
+        </div>
+        <button class="btn btn-danger bottom" onclick="leaveCyber()">ПРОДОЛЖИТЬ</button>
+    </section>
+
+    <!-- ══════════════ ПОСЛЕДСТВИЯ ══════════════ -->
+    <section class="screen" id="screen-consequences">
+        <div class="top-bar">
+            <span>◈ ПОСЛЕДСТВИЯ</span>
+            <button class="icon-btn" onclick="navigateTo('screen-menu')">✕</button>
+        </div>
+        <div class="conseq-list" id="conseq-list"></div>
+        <button class="btn btn-primary bottom" onclick="goBack()">НАЗАД</button>
+    </section>
+
+    <!-- ══════════════ КАРТА ══════════════ -->
+    <section class="screen" id="screen-map">
+        <div class="top-bar">
+            <span>◈ СЕКТОР ДЕЛЬТА</span>
+            <button class="icon-btn" onclick="goBack()">✕</button>
+        </div>
+        <div class="map-body">
+            <div class="map-grid"></div>
+            <svg class="map-lines" id="map-lines" viewBox="0 0 100 100" preserveAspectRatio="none"></svg>
+            <div id="map-nodes"></div>
+            <div class="map-contract" id="map-contract"></div>
+        </div>
+        <button class="btn btn-primary bottom" id="map-travel" onclick="travel()">В БАР «РЕЛИКТ»</button>
+    </section>
+
+    <!-- ══════════════ СИСТЕМА ══════════════ -->
+    <section class="screen" id="screen-system">
+        <div class="top-bar">
+            <span>◈ СИСТЕМА</span>
+            <button class="icon-btn" onclick="goBack()">✕</button>
+        </div>
+        <div class="system-body">
+            <div class="sys-row"><span>Скорость текста</span><input type="range" id="sys-speed" min="0" max="100" value="80"></div>
+            <div class="sys-row"><span>Размер шрифта</span><input type="range" id="sys-font" min="10" max="24" value="16"></div>
+            <div class="sys-row"><span>Цвет интерфейса</span>
+                <div class="color-pick">
+                    <button class="color-btn active" data-color="lime" style="background:#CCFF00"></button>
+                    <button class="color-btn" data-color="magenta" style="background:#FF007F"></button>
+                    <button class="color-btn" data-color="cyan" style="background:#00E5FF"></button>
+                </div>
+            </div>
+            <div class="sys-row"><span>Звук</span><input type="range" id="sys-sfx" min="0" max="100" value="70"></div>
+            <div class="sys-row"><span>Музыка</span><input type="range" id="sys-music" min="0" max="100" value="40"></div>
+            <div class="sys-row"><span>Язык</span><span class="sys-value">RU</span></div>
+
+            <div class="block-label sys-label">СОХРАНЕНИЕ // 3 СЛОТА</div>
+            <div class="save-slots" id="save-slots"></div>
+
+            <button class="btn btn-danger" onclick="resetGame()">СБРОС ПРОГРЕССА</button>
+        </div>
+        <button class="btn btn-ghost bottom" onclick="goBack()">ЗАКРЫТЬ</button>
+    </section>
+
+    <!-- ══════════════ АРХИВ ИСХОДОВ ══════════════ -->
+    <section class="screen" id="screen-endings">
+        <div class="top-bar">
+            <span>◈ АРХИВ ИСХОДОВ</span>
+            <button class="icon-btn" onclick="navigateTo('screen-menu')">✕</button>
+        </div>
+        <div class="endings-body" id="endings-body"></div>
+    </section>
+
+    <!-- ══════════════ ICE / ВЗЛОМ (ОВЕРЛЕЙ) ══════════════ -->
+    <div class="ice-overlay" id="ice-overlay">
+      <div class="ice-panel">
+        <div class="ice-header">
+          <span>◈ ICE / ВЗЛОМ</span>
+          <button class="icon-btn" onclick="cancelIce()">✕</button>
+        </div>
+
+        <div class="ice-sub-header">
+          <div class="ice-sub" id="ice-sub">СИЛЬВА // НЕЙРО-ЗАЩИТА 04</div>
+          <div class="ice-target">ЦЕЛЬ: <span id="ice-target">A7 → C2 → 77 → F6 → 42</span></div>
+        </div>
+
+        <div class="ice-grid" id="ice-grid"></div>
+
+        <div class="ice-status" id="ice-status">
+          <div class="ice-status-title">СЛЕДУЮЩИЙ УЗЕЛ: <span id="ice-next">A7</span></div>
+          <div class="ice-status-desc" id="ice-status-desc">Выбирай соседний узел по горизонтали или вертикали. Диагональные переходы запрещены.</div>
+        </div>
+
+        <div class="ice-timer">
+          <div class="ice-timer-bar"><div class="ice-timer-fill" id="ice-timer-fill"></div></div>
+          <div class="ice-timer-label" id="ice-timer-label">00:25</div>
+        </div>
+
+        <button class="btn btn-danger" onclick="cancelIce()">ПРЕРВАТЬ ВЗЛОМ</button>
+      </div>
+    </div>
+
+    <!-- ══════════════ НЕЙРО-СВЯЗЬ ══════════════ -->
+    <section class="screen" id="screen-links">
+        <div class="top-bar">
+            <span>◈ НЕЙРО-СВЯЗЬ</span>
+            <button class="icon-btn" onclick="goBack()">✕</button>
+        </div>
+        <div class="links-body" id="links-body"></div>
+        <button class="btn btn-primary bottom" onclick="goBack()">ЗАКРЫТЬ</button>
+    </section>
+
+    <!-- ══════════════ ФРАКЦИИ ══════════════ -->
+    <section class="screen" id="screen-factions">
+        <div class="top-bar">
+            <span>◈ ФРАКЦИИ</span>
+            <button class="icon-btn" onclick="goBack()">✕</button>
+        </div>
+        <div class="factions-body" id="factions-body"></div>
+        <button class="btn btn-primary bottom" onclick="goBack()">ЗАКРЫТЬ</button>
+    </section>
+
+    <!-- ══════════════ РЫНОК ══════════════ -->
+    <section class="screen" id="screen-market">
+        <div class="top-bar">
+            <span>◈ РЫНОК</span>
+            <span class="balance">БАЛАНС / <span id="market-balance">3 200</span> КРЕД</span>
+        </div>
+        <div class="market-body" id="market-body"></div>
+        <button class="btn btn-ghost bottom" onclick="goBack()">НАЗАД</button>
+    </section>
+
+    <!-- ══════════════ ТОЧКИ ВОЗВРАТА ══════════════ -->
+    <section class="screen" id="screen-returns">
+        <div class="top-bar">
+            <span>◈ ТОЧКИ ВОЗВРАТА</span>
+            <span class="balance" id="returns-counter">0 ЗАПИСЕЙ</span>
+        </div>
+        <div class="returns-body" id="returns-body"></div>
+        <div class="bottom-row">
+            <button class="btn btn-ghost" onclick="goBack()">НАЗАД</button>
+            <button class="btn btn-danger" onclick="deleteAllReturns()">УДАЛИТЬ ВСЁ</button>
+        </div>
+    </section>
+
+    <!-- ══════════════ АУДИО ══════════════ -->
+    <section class="screen" id="screen-audio">
+        <div class="top-bar">
+            <span>◈ АУДИО</span>
+            <span class="balance" id="audio-count">АРХИВ ГОЛОСОВ / 2 ИЗ 4</span>
+        </div>
+        <div class="audio-body">
+            <div class="audio-player">
+                <div class="audio-title" id="audio-title">Запись 01 — Мыть</div>
+                <div class="audio-wave" id="audio-wave">
+                    <span style="height:40%"></span><span style="height:70%"></span><span style="height:30%"></span>
+                    <span style="height:90%"></span><span style="height:50%"></span><span style="height:75%"></span>
+                    <span style="height:25%"></span><span style="height:85%"></span><span style="height:45%"></span>
+                    <span style="height:60%"></span><span style="height:35%"></span><span style="height:80%"></span>
+                    <span style="height:55%"></span><span style="height:65%"></span><span style="height:30%"></span>
+                </div>
+                <div class="audio-time" id="audio-time">ПАУЗА // 00:00 / 01:18</div>
+                <button class="btn btn-ghost" id="audio-btn" onclick="toggleAudio()">ВОСПРОИЗВЕСТИ</button>
+            </div>
+
+            <div class="audio-list" id="audio-list"></div>
+
+            <div class="audio-transcript">
+                <div class="audio-transcript-tag" id="audio-transcript-tag">РАСШИФРОВКА // 00:24</div>
+                <div class="audio-transcript-text" id="audio-transcript-text"></div>
+                <div class="audio-transcript-foot" id="audio-transcript-foot">ГОЛОС НЕ ОПОЗНАН // ВОСПОМИНАНИЕ СОХРАНЕНО</div>
+            </div>
+        </div>
+        <button class="btn btn-primary bottom" onclick="goBack()">ЗАКРЫТЬ</button>
+    </section>
+
+    <!-- ══════════════ АРХИВ / ЛЕНТА ══════════════ -->
+    <section class="screen" id="screen-archive">
+        <div class="top-bar">
+            <span>◈ АРХИВ / ЛЕНТА</span>
+            <span class="balance" id="archive-count">0 ЗАПИСЕЙ</span>
+        </div>
+        <div class="archive-body">
+            <input class="archive-search" id="archive-search" placeholder="Поиск в воспоминаниях..." oninput="renderArchive()">
+            <div id="archive-list"></div>
+            <div class="archive-detail" id="archive-detail">
+                <div class="archive-detail-title" id="archive-detail-title">—</div>
+                <div class="archive-detail-text" id="archive-detail-text">Выбери фрагмент.</div>
+                <div class="archive-detail-foot" id="archive-detail-foot">АРХИВ ИСХОДОВ // СОХРАНЁННЫЙ ФРАГМЕНТ</div>
+            </div>
+        </div>
+        <button class="btn btn-primary bottom" onclick="goBack()">ЗАКРЫТЬ</button>
+    </section>
+
+    <!-- ══════════════ БРОСОК КУБИКА (ОВЕРЛЕЙ) ══════════════ -->
+    <div class="dice-overlay" id="dice-overlay">
+        <div class="dice-panel">
+            <div class="dice-title" id="dice-title">ПРОВЕРКА // ВЗЛОМ</div>
+            <div class="dice-value" id="dice-value">00</div>
+            <div class="dice-chance" id="dice-chance">ШАНС 72%</div>
+            <div class="dice-bar"><div class="dice-fill" id="dice-fill"></div></div>
+            <div class="dice-result" id="dice-result">...</div>
+        </div>
+    </div>
+
+    <!-- ══════════════ ТОСТ ══════════════ -->
+    <div class="toast" id="toast"></div>
+
+    <!-- ══════════════ БОКОВОЕ МЕНЮ (OVERLAY) ══════════════ -->
+    <aside class="side-menu" id="side-menu">
+        <div class="side-header">
+            <span>// НАВИГАЦИЯ</span>
+            <button class="icon-btn" onclick="toggleMenu()">✕</button>
+        </div>
+        <div class="side-scroll">
+            <div class="side-group">СЮЖЕТ</div>
+            <button class="side-btn" onclick="navigateTo('screen-reading');toggleMenu()">◈ ТЕКУЩАЯ СЦЕНА</button>
+            <button class="side-btn" onclick="navigateTo('screen-chapters');toggleMenu()">◈ ВЫБОР ДНЯ</button>
+            <button class="side-btn" onclick="navigateTo('screen-consequences');toggleMenu()">◈ ПОСЛЕДСТВИЯ</button>
+            <button class="side-btn" onclick="navigateTo('screen-map');toggleMenu()">◈ КАРТА</button>
+            <button class="side-btn" onclick="navigateTo('screen-archive');toggleMenu()">◈ АРХИВ / ЛЕНТА</button>
+            <button class="side-btn" onclick="navigateTo('screen-audio');toggleMenu()">◈ АУДИО</button>
+
+            <div class="side-group">СУБЪЕКТ</div>
+            <button class="side-btn" onclick="navigateTo('screen-subject');toggleMenu()">◈ СУБЪЕКТ</button>
+            <button class="side-btn" onclick="navigateTo('screen-ripperdoc');toggleMenu()">◈ РИППЕРДОК</button>
+            <button class="side-btn" onclick="navigateTo('screen-market');toggleMenu()">◈ РЫНОК</button>
+
+            <div class="side-group">ГОРОД</div>
+            <button class="side-btn" onclick="navigateTo('screen-links');toggleMenu()">◈ НЕЙРО-СВЯЗЬ</button>
+            <button class="side-btn" onclick="navigateTo('screen-factions');toggleMenu()">◈ ФРАКЦИИ</button>
+
+            <div class="side-group">СИСТЕМА</div>
+            <button class="side-btn" onclick="navigateTo('screen-returns');toggleMenu()">◈ ТОЧКИ ВОЗВРАТА</button>
+            <button class="side-btn" onclick="navigateTo('screen-endings');toggleMenu()">◈ АРХИВ ИСХОДОВ</button>
+            <button class="side-btn" onclick="navigateTo('screen-system');toggleMenu()">◈ СИСТЕМА</button>
+        </div>
+    </aside>
+
+</div>
+
+<script src="story.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
